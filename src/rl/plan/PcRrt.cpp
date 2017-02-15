@@ -53,7 +53,7 @@ namespace rl
       }
     }
 
-    PcRrt::Neighbor PcRrt::nearest(const Tree& tree, const ::rl::math::Vector& chosen)
+    PcRrt::Neighbor PcRrt::nearest(const Tree& tree, const ::rl::math::Vector& chosen, double& directionSigma)
     {
       struct NeighborCompare
       {
@@ -104,6 +104,12 @@ namespace rl
         {
           bestNeighbor.first = vertex;
           bestNeighbor.second = metric;
+          rl::math::Vector dir = chosen-g.configMean();
+          dir.normalize();
+          //Mahalanobis distance squared
+          Eigen::LLT<Eigen::MatrixXd> lltOfG(g.configCovariance());
+
+          directionSigma = dir.transpose()*lltOfG.solve(dir);
         }
 
         tested++;
@@ -172,33 +178,47 @@ namespace rl
         else
           this->choose(chosenSample);
 
+        double directionSigma;
+        Neighbor n = this->nearest(this->tree[0], chosenSample, directionSigma);
 
-        Neighbor n = this->nearest(this->tree[0], chosenSample);
         Vertex chosenVertex = n.first;
 
         ::std::vector<Particle> particles;
         ::rl::math::Vector3 slidingNormal;
         slidingNormal.setZero();
 
-        // randomly decide to do a slide or not
-        boost::random::uniform_int_distribution<> doSlideDistr(0, 100);
-        bool doGuardedMove = doSlideDistr(*this->gen) < 30;
-        bool doSlide = doSlideDistr(*this->gen) > 50;
+
+
+
         // sample[...]Particles will return false if the particle set is not useful
         bool sampleResult = false;
 
-        if (doSlide)
+
+        if( this->tree[0][n.first].gState->isInCollision())
         {
-          if( this->tree[0][n.first].gState->isInCollision())
+          // randomly decide to do a slide or not
+          boost::random::uniform_01<boost::random::mt19937> doSlideDistr(*this->gen);
+          double val = doSlideDistr()/(sqrt(directionSigma)*this->goalEpsilon);
+          bool doSlide = val < 0.5;
+          std::cout<<"doslide "<<val<<std::endl;
+
+          if (doSlide)
             sampleResult = this->sampleSlidingParticles(false, n, chosenSample, this->nrParticles, particles, slidingNormal);
-        }
-        else if (doGuardedMove)
-        {
-          sampleResult = this->sampleGuardedParticles(n, chosenSample, this->nrParticles, particles);
+          else
+            sampleResult = this->sampleConnectParticles(n, chosenSample, this->nrParticles, false, particles);
         }
         else
         {
-          sampleResult = this->sampleConnectParticles(n, chosenSample, this->nrParticles, false, particles);
+          // randomly decide to do a slide or not
+          boost::random::uniform_01<boost::random::mt19937> doGuardDistr(*this->gen);
+          double val = doGuardDistr()/(sqrt(directionSigma)*this->goalEpsilon);
+          bool doGuardedMove = val < 0.5;
+          std::cout<<"doguard "<<val<<std::endl;
+
+          if (doGuardedMove)
+            sampleResult = this->sampleGuardedParticles(n, chosenSample, this->nrParticles, particles);
+          else
+            sampleResult = this->sampleConnectParticles(n, chosenSample, this->nrParticles, false, particles);
         }
 
 
@@ -548,7 +568,7 @@ namespace rl
 
         if(gs->isSlidingMove())
         {
-          path_ss<<gs->getSlidingNormal()(0)<<"\t"<<gs->getSlidingNormal()(1)<<"\t"<<gs->getSlidingNormal()(2);
+          path_ss<<gs->getSlidingNormal()(0)<<"\t"<<gs->getSlidingNormal()(1)<<"\t"<<gs->getSlidingNormal()(2)<<"\t";
         }
         else
         {
@@ -557,13 +577,13 @@ namespace rl
 
         ::rl::math::Transform ee_t = *(this->tree[0][*it].t);
         ::rl::math::Quaternion q(ee_t.linear());
-        path_ss<<ee_t(0,3)<<" "<<ee_t(1,3)<<" "<<ee_t(2,3)<<" "<< q.x()<<"\t"<<q.y()<<"\t"<<q.z()<<"\t"<<q.w();
+        path_ss<<ee_t(0,3)<<"\t"<<ee_t(1,3)<<"\t"<<ee_t(2,3)<<"\t"<< q.x()<<"\t"<<q.y()<<"\t"<<q.z()<<"\t"<<q.w();
         path_ss<<std::endl;
 
 
       }
       path_string = path_ss.str();
-      std::cout<<path_string<<std::endl;
+      //std::cout<<path_string<<std::endl;
     }
 
     bool PcRrt::isEqualCollisionState(::rl::sg::solid::Scene::CollisionMap& first, ::rl::sg::solid::Scene::CollisionMap& second)

@@ -83,7 +83,7 @@ namespace rl
       //void kMeans(const ::rl::math::Matrix& data, const int k, ::std::vector<::std::vector<::rl::math::Vector> >& clusters);
 
 
-      PcRrt::Neighbor nearest(const Tree& tree, const ::rl::math::Vector& chosen);
+      PcRrt::Neighbor nearest(const Tree& tree, const ::rl::math::Vector& chosen, double& directionSigma);
 
       typedef ::std::vector<Particle> ParticleSet;
 
