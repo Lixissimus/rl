@@ -1,0 +1,13 @@
+This project is a fork of RoboticsLibrary.
+
+Details: 
+http://www.roboticslibrary.org
+
+Build Instructions:
+http://www.roboticslibrary.org/tutorials/build-ubuntu
+
+If you want to try the Contact planner:
+run build/demos/rlPlanDemo/rlPlanDemo
+and open rl-examples-0.6.2/rlplan/box-2d-050505_boxes_pcrrt.xml
+
+Hit space to start planning and F12 to reset the planner.
