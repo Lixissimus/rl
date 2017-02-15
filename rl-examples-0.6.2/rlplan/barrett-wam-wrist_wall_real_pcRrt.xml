@@ -9,7 +9,7 @@
 			<q>1.51822</q>
 			<q>0</q>
 			<q unit="deg">-39</q>
-			<q>0</q>
+			<q unit="deg">90</q>
 		</goal>
 		<model>
 			<kinematics href="../rlkin/barrett-wam-wrist.xml">
@@ -36,7 +36,7 @@
 			<q unit="deg">130</q>
 			<q unit="deg">0</q>
 			<q unit="deg">0</q>
-			<q unit="deg">0</q>
+			<q unit="deg">90</q>
 		</start>
 		<viewer>
 			<background>
@@ -90,7 +90,7 @@
               <q>0.02</q>
               <q>0.0</q>
             </motionError>
-            <goalEpsilon>0.05</goalEpsilon>
+            <goalEpsilon>0.03</goalEpsilon>
             <!-- <useMotionError/> -->
             <uniformSampler>
               <seed>1</seed>
