@@ -28,7 +28,9 @@ namespace rl
     }
 
     PcRrt::PcRrt() :
-      Rrt()
+      Rrt(),
+      nrParticles(20),
+      gamma(0.5)
     {
       // comment in for random seed
       // this->gen = ::boost::make_shared<boost::random::mt19937>(std::time(0));
@@ -74,7 +76,7 @@ namespace rl
       Neighbor bestNeighbor(nullptr, ::std::numeric_limits<::rl::math::Real>::max());
 
       int tested = 0;
-      for (auto n = neighbors.begin(); n != neighbors.end() && tested < 5; ++n)
+      for (auto n = neighbors.begin(); n != neighbors.end() && tested < 10; ++n)
       {
         const auto& vertex = (*n).first;
         const auto& mean = tree[vertex].gState->configMean();
@@ -99,7 +101,9 @@ namespace rl
         }
 
         GaussianState g(movedParticles);
-        ::rl::math::Real metric =  g.configGaussian().eigenvalues().sum();
+        ::rl::math::Real distanceMetric =  this->gamma*g.configGaussian().eigenvalues().sum();
+        ::rl::math::Real uncertaintyMetric =  g.configGaussian().covariance.trace();
+        ::rl::math::Real metric =  this->gamma * uncertaintyMetric + (1.0 - this->gamma) * distanceMetric;
         if (metric < bestNeighbor.second)
         {
           bestNeighbor.first = vertex;
@@ -107,9 +111,9 @@ namespace rl
           rl::math::Vector dir = chosen-g.configMean();
           dir.normalize();
           //Mahalanobis distance squared
-          Eigen::LLT<Eigen::MatrixXd> lltOfG(g.configCovariance());
+          //Eigen::LLT<Eigen::MatrixXd> lltOfG(g.configCovariance());
 
-          directionSigma = dir.transpose()*lltOfG.solve(dir);
+          //directionSigma = dir.transpose()*lltOfG.solve(dir);
         }
 
         tested++;
@@ -198,9 +202,9 @@ namespace rl
         {
           // randomly decide to do a slide or not
           boost::random::uniform_01<boost::random::mt19937> doSlideDistr(*this->gen);
-          double val = doSlideDistr()/(sqrt(directionSigma)*this->goalEpsilon);
-          bool doSlide = val < 0.5;
-          std::cout<<"doslide "<<val<<std::endl;
+          //double val = doSlideDistr()/(sqrt(directionSigma)*this->goalEpsilon);
+          bool doSlide = doSlideDistr() < this->gamma;
+          //std::cout<<"doslide "<<val<<std::endl;
 
           if (doSlide)
             sampleResult = this->sampleSlidingParticles(false, n, chosenSample, this->nrParticles, particles, slidingNormal);
@@ -211,9 +215,9 @@ namespace rl
         {
           // randomly decide to do a slide or not
           boost::random::uniform_01<boost::random::mt19937> doGuardDistr(*this->gen);
-          double val = doGuardDistr()/(sqrt(directionSigma)*this->goalEpsilon);
-          bool doGuardedMove = val < 0.5;
-          std::cout<<"doguard "<<val<<std::endl;
+          //double val = doGuardDistr()/(sqrt(directionSigma)*this->goalEpsilon);
+          bool doGuardedMove = doGuardDistr() < this->gamma;
+          //std::cout<<"doguard "<<val<<std::endl;
 
           if (doGuardedMove)
             sampleResult = this->sampleGuardedParticles(n, chosenSample, this->nrParticles, particles);

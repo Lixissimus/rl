@@ -1376,7 +1376,8 @@ MainWindow::load(const QString& filename)
 			pcRrt->delta *= rl::math::DEG2RAD;
 		}
 		
-		pcRrt->nrParticles = (int) path.eval("number(nrParticles)", planner.getNodeTab(0)).getFloatval(50.0f);
+    pcRrt->nrParticles = (int) path.eval("number(nrParticles)", planner.getNodeTab(0)).getFloatval(20.0f);
+    pcRrt->gamma = path.eval("number(gamma)", planner.getNodeTab(0)).getFloatval(0.5f);
 		pcRrt->epsilon = path.eval("number(epsilon)", planner.getNodeTab(0)).getFloatval(1.0e-3f);
 		pcRrt->goalEpsilon = path.eval("number(goalEpsilon)", planner.getNodeTab(0)).getFloatval(1.0);
 
