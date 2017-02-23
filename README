@@ -1,0 +1,21 @@
+This project is a fork of RoboticsLibrary.
+
+Details: 
+http://www.roboticslibrary.org
+
+Build Instructions:
+http://www.roboticslibrary.org/tutorials/build-ubuntu
+
+If you want to try the Contact planner:
+run build/demos/rlPlanDemo/rlPlanDemo
+and open rl-examples-0.6.2/rlplan/box-2d-narrow-region_pcrrt.xml
+
+Hit space to start planning and F12 to reset the planner.
+
+
+Troubleshooting:
+Q: I cannot build the robotics library under Ubuntu 16.04
+A: The launchpad repository is broken for 16.04. Markus Rickert (roboticslibrary developer) told me there will be a new version very soon that works under 16.04.
+
+Q: The planner says "start or goal invalid" for the plan file above
+A: You need an english number format in your OS. On Ubuntu type "locale" in the shell - there should be something like LC_NUMERIC=en_US.UTF-8. If it says something with "DE" you have to change the LC_NUMERIC field in /etc/default/locale 
