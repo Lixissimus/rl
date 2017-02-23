@@ -207,7 +207,10 @@ namespace rl
           //std::cout<<"doslide "<<val<<std::endl;
 
           if (doSlide)
-            sampleResult = this->sampleSlidingParticles(false, n, chosenSample, this->nrParticles, particles, slidingNormal);
+          {
+            bool doGuardedSlide = doSlideDistr() < this->gamma;
+            sampleResult = this->sampleSlidingParticles(doGuardedSlide, n, chosenSample, this->nrParticles, particles, slidingNormal);
+          }
           else
             sampleResult = this->sampleConnectParticles(n, chosenSample, this->nrParticles, false, particles);
         }
@@ -817,7 +820,7 @@ namespace rl
       this->model->setPosition(this->tree[0][nearest.first].gState->configMean());
       this->model->updateFrames();
       ::rl::math::Vector3 initPoint = this->model->forwardPosition().translation();
-#define RANDOM_DIRECTION
+//#define RANDOM_DIRECTION
 #ifdef RANDOM_DIRECTION
       ::rl::math::Vector dir(this->model->getDof());
       sampleDirection(dir);
@@ -1169,7 +1172,7 @@ namespace rl
           //Project back on sliding surface
           if(!moveConfigOnSurface(newStep, slidingContact.point, slidingContact.normal_env, slidingPair, nextStepReal))
           {
-            std::cout<<"Could not project cfg on surface!!"<<std::endl;
+            //std::cout<<"Could not project cfg on surface!!"<<std::endl;
             break;
           }
 
