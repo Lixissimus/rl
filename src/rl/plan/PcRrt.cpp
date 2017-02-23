@@ -238,8 +238,9 @@ namespace rl
 //          if(particles.begin()->contacts.size()>0)
 //            this->drawSurfaceNormal(particles.begin()->contacts.begin()->point,particles.begin()->contacts.begin()->normal_env,0.1);
 
+
           //std::cout<<g.eigenvalues().sum()<<std::endl;
-          if(g.eigenvalues().sum()<0.1)
+          //if(g.eigenvalues().sum()<0.1)
           {
           // add a new vertex and edge
           VectorPtr mean = ::boost::make_shared<::rl::math::Vector>(g.mean);
@@ -252,6 +253,25 @@ namespace rl
           this->tree[0][newVertex].t = ::boost::make_shared<::rl::math::Transform>(this->model->forwardPosition());
 
           this->addEdge(chosenVertex, newVertex, this->tree[0]);
+
+          ::rl::math::Real maxError = 0;
+          for(int i=0; i<particles.size(); i++)
+          {
+            this->model->setPosition(particles[i].config);
+            this->model->updateFrames();
+            maxError = std::max(maxError,::rl::math::transform::distance(goalT, this->model->forwardPosition(), 0.0));
+          }
+
+          //std::cout << "reached goal with error: " << maxError << " (max allowed: " << this->goalEpsilon << ")" << std::endl;
+
+          if (maxError < this->goalEpsilon)
+          {
+            // visualize goal connect step
+            this->drawParticles(particles);
+            this->end[0] = newVertex;
+            return true;
+          }
+
 
           // try to connect to goal
           Neighbor nearest;
