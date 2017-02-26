@@ -33,8 +33,10 @@ namespace rl
       gamma(0.5)
     {
       // comment in for random seed
-      // this->gen = ::boost::make_shared<boost::random::mt19937>(std::time(0));
-      this->gen = ::boost::make_shared<boost::random::mt19937>(44);
+      int seed = std::time(0);
+      this->gen = ::boost::make_shared<boost::random::mt19937>(seed);
+      std::cout<<"seed: "<<seed<<std::endl;
+      //this->gen = ::boost::make_shared<boost::random::mt19937>(44);
     }
 
     //Needed for Guarded moves
@@ -308,7 +310,6 @@ namespace rl
                 // visualize goal connect step
                 this->drawParticles(goalParticles);
                 Gaussian g = goalState->configGaussian();
-                this->drawEigenvectors(g, 1.0);
                 // add goal connect step to tree
                 Vertex connected = this->addVertex(this->tree[0], possibleGoal.q);
                 this->tree[0][connected].gState = goalState;
@@ -757,7 +758,7 @@ namespace rl
 
             if(collMap.size()>1)
             {
-              std::cout<<"Connect move ends in a state with two collisions - this should not happen!"<<std::endl;
+              //std::cout<<"Connect move ends in a state with two collisions - this should not happen!"<<std::endl;
               return false;
             }
 
@@ -912,7 +913,7 @@ namespace rl
 
           if(collMap.size()>1)
           {
-            std::cout<<"Guarded move ends in a state with two collisions - this should not happen!"<<std::endl;
+            //std::cout<<"Guarded move ends in a state with two collisions - this should not happen!"<<std::endl;
             return false;
           }
 
@@ -1340,7 +1341,8 @@ namespace rl
           for (int j = 0; j < particles[i].contacts.size(); ++j)
           {
             opPos = particles[i].contacts[j].point;
-            this->viewer->drawSphere(opPos, 0.02);
+            if(this->viewer)
+              this->viewer->drawSphere(opPos, 0.02);
           }
         }
         else
@@ -1352,7 +1354,8 @@ namespace rl
           opPos[0] = t.translation().x();
           opPos[1] = t.translation().y();
           opPos[2] = t.translation().z();
-          this->viewer->drawSphere(opPos, 0.02);
+          if(this->viewer)
+            this->viewer->drawSphere(opPos, 0.02);
         }
 
       }
