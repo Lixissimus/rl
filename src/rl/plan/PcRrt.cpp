@@ -33,9 +33,9 @@ namespace rl
       gamma(0.5)
     {
       // comment in for random seed
-      int seed = std::time(0);
-      this->gen = ::boost::make_shared<boost::random::mt19937>(seed);
-      std::cout<<"seed: "<<seed<<std::endl;
+      this->seed = std::time(0);
+      this->gen = ::boost::make_shared<boost::random::mt19937>(this->seed);
+      std::cout<<"seed: "<< this->seed<<std::endl;
       //this->gen = ::boost::make_shared<boost::random::mt19937>(44);
     }
 
@@ -169,6 +169,8 @@ namespace rl
       this->model->setPosition(*this->goal);
       this->model->updateFrames();
       ::rl::math::Transform goalT = this->model->forwardPosition();
+
+      std::cout<<goalT.translation()<<std::endl;
 
       while (timer.elapsed() < this->duration)
       {

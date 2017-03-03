@@ -58,6 +58,7 @@ namespace rl
 
       int nrParticles;
       rl::math::Real gamma;
+      int seed;
       ::rl::math::Real goalEpsilon;
       ::rl::sg::solid::Scene *solidScene;
       void getPath(VectorList& path, int i);

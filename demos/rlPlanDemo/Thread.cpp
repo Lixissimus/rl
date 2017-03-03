@@ -309,13 +309,15 @@ Thread::run()
     {
 
       std::fstream path_log;
-      path_log.open("solutionpath.csv", std::ios::in | std::ios::out | std::ios_base::trunc);
+      std::stringstream str;
+      str<<"solutionpath"<<pcrrt->nrParticles<<"_"<<pcrrt->seed<<".csv";
+      path_log.open(str.str(), std::ios::in | std::ios::out | std::ios_base::trunc);
 
       for(int j=0; j<MainWindow::instance()->model->getDof(); j++)
       {
         path_log<<"q"<<j<<"\t ";
       }
-      path_log << "expectContact\t normal_x\t normal_y\t normal_z\t ee_px \t ee_py \t ee_pz \t ee_rx \t ee_ry \t ee_rz \t ee_rw" << std::endl;
+      path_log << "expectContact\t normal_x\t normal_y\t normal_z\t ee_px \t ee_py \t ee_pz \t ee_rx \t ee_ry \t ee_rz \t ee_rw \t\t n: "<<pcrrt->nrParticles<<"\t time: " <<timer.elapsed() <<"\t seed: "<<pcrrt->seed<< std::endl;
 
 
       std::string path_str;
@@ -326,7 +328,7 @@ Thread::run()
       for(int i=0; i<pcrrt->nrParticles; i++)
       {
         pcrrt->getPath(path, i);
-        if (this->swept)
+        if (this->swept && i==0)
         {
           this->drawSweptVolume(path);
           return;
