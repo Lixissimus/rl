@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rlplan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rlplan.xsd">
 	<pcRrt>
+	     <nrParticles>1</nrParticles>
 		<duration>180</duration>
+		<start>
+			<q unit="deg">90</q>
+			<q>0.704922,</q>
+			<q>0</q>
+			<q>1.51822</q>
+			<q>0</q>
+			<q unit="deg">-39</q>
+			<q unit="deg">90</q>
+		</start>
 		<goal>
 			<q>0</q>
 			<q>0.704922,</q>
@@ -29,15 +39,6 @@
 			<model>0</model>
 			<scene href="../rlsg/barrett-wam-wrist_wall_real.convex.xml"/>
 		</model>
-		<start>
-			<q unit="deg">0</q>
-			<q unit="deg">-50</q>
-			<q unit="deg">0</q>
-			<q unit="deg">130</q>
-			<q unit="deg">0</q>
-			<q unit="deg">0</q>
-			<q unit="deg">90</q>
-		</start>
 		<viewer>
 			<background>
 				<r>1</r>
@@ -72,7 +73,6 @@
 		</viewer>
 		<gamma>0.9</gamma>
 		<delta unit="deg">0.5</delta>
-         <nrParticles>20</nrParticles>
              <initialError>
               <q>0.02</q>
               <q>0.02</q>
@@ -80,7 +80,7 @@
               <q>0.02</q>
               <q>0.02</q>
               <q>0.02</q>
-              <q>0.0</q>
+              <q>0.02</q>
             </initialError>
             <motionError>
               <q>0.02</q>

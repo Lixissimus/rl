@@ -90,6 +90,6 @@
     <uniformSampler>
       <seed>1</seed>
     </uniformSampler>
-    <gamma>0.8</gamma>
+    <gamma>0.5</gamma>
   </pcRrt>
 </rlplan>

@@ -5,22 +5,33 @@ Transform
   translation 7.87165015e-2 0 0
   children 
     [
-    DEF box-2d-050505 Transform
+    DEF box-6d-050505 Transform
       {
       translation 0 1.99999809e-2 0.50000000
-      children 
-	[
-	DEF link0 Transform
-	  {
-	  }
-	DEF link1 Transform
-	  {
-	  }
+
+      children [
+				DEF link0 Transform {
+					children [
+					]
+				}
+				DEF link1 Transform {
+					children [
+					]
+				}
+				DEF link2 Transform {
+					children [
+					]
+				}
 	DEF body1 Transform
 	  {
 	  translation 0 1.93645805e-2 0
-	  children 
-	    [
+	  children [
+	  Transform {
+	  rotation 1 0 0 1.57
+	   children [
+	   	  Transform {
+	  rotation 0 0 1 1.57
+	   children [
 	    DEF box1 Shape
 	      {
 	      appearance Appearance
@@ -32,7 +43,7 @@ Transform
 		}
 	      geometry Box
 		{
-		size 0.50000000 0.50000000 0.50000000
+		size 0.50000000 0.50000000 0.30000000
 		}
 	      }
 	    DEF body1_6 Transform
@@ -51,7 +62,7 @@ Transform
 		    }
 		  geometry Box
 		    {
-		    size 0.50000000 0.50000000 0.50000000
+		    size 0.50000000 0.50000000 0.20000000
 		    }
 		  }
 	      }
@@ -71,7 +82,7 @@ Transform
 		    }
 		  geometry Box
 		    {
-		    size 0.50000000 0.50000000 0.50000000
+		    size 0.50000000 0.50000000 0.10000000
 		    }
 		  }
 	      }
@@ -91,7 +102,7 @@ Transform
 		    }
 		  geometry Box
 		    {
-		    size 0.50000000 0.50000000 0.50000000
+		    size 0.50000000 0.50000000 0.20000000
 		    }
 		  }
 	      }
@@ -111,17 +122,21 @@ Transform
 		    }
 		  geometry Box
 		    {
-		    size 0.50000000 0.50000000 0.50000000
+		    size 0.50000000 0.50000000 0.10000000
 		    }
 		  }
 	      }
 	    ]
 	  }
+	  ]
+	  }
+	  ]
+	  }
 	]
       }
     DEF boxes Inline
       {
-      url "gripper-pomdp.wrl"
+      url "gripper-pomdp-box.wrl"
       }
     ]
   }
