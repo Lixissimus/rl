@@ -17,7 +17,7 @@ For a detailed information look at [this](https://www.howtogeek.com/261575/how-t
 
 ## Experiments
 
-The following experiments were run for the benchmarks in Release build mode.
+For the benchmarks in the report, the following experiments were run in release mode. Once the scene is loaded, hit `space` to start planning and `F12` to reset the planner.
 
 ### RRT-Connect 
 ```
