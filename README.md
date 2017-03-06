@@ -38,3 +38,11 @@ The following experiments were run for the benchmarks in Release build mode.
 ```
 ./demos/rlPlanDemo/rlPlanDemo ../rl-examples-0.6.2/rlplan/box-2d-gripper-pomdp_pcrrt.xml
 ```
+
+## Architecture Overview
+
+The main planner is implemented in `src/rl/plan/PcRrt.cpp` with some helper structures defined in `src/rl/plan/PcRrtExtensions.h`. To run the planner, we utilize the built-in demo `demos/rlPlanDemo/rlPlanDemo`. Extensions has been made to `demos/rlPlanDemo/MainWindow.cpp` to be able to select the planner and its arguments via XML tags in the scenario files. 
+
+Furthermore, extensions needed to be made to the scene graph implementation to extract surface normals. This is just implemented for the SOLID library right now and the implementation resides in `src/rl/sg/solid/Scene.cpp`.
+
+To simulate motion errors, a new model has been implemented in `src/rl/plan/NoisyModel.cpp`, which allows to interpolate noisy from one configuration to another. The noise parameters are also set via XML tags and are assigned to the model in `demos/rlPlanDemo/MainWindow.cpp`.
